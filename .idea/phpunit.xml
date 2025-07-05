@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PHPUnit">
+    <option name="directories">
+      <list>
+        <option value="$PROJECT_DIR$/app/Domains/Alarm/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/AlarmNotification/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/City/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/Configuration/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/Country/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/Dashboard/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/Device/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/DeviceMessage/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/IpLock/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/Language/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/Maintenance/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/MaintenanceItem/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/Position/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/Profile/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/Refuel/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/Server/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/Shared/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/State/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/Timezone/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/Trip/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/User/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/UserSession/Test" />
+        <option value="$PROJECT_DIR$/app/Domains/Vehicle/Test" />
+      </list>
+    </option>
+  </component>
+</project>

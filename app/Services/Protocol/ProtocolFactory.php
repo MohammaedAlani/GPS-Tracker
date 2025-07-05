@@ -12,6 +12,7 @@ use App\Services\Protocol\H02\Manager as H02Manager;
 use App\Services\Protocol\OsmAnd\Manager as OsmAndManager;
 use App\Services\Protocol\Queclink\Manager as QueclinkManager;
 use App\Services\Protocol\Teltonika\Manager as TeltonikaManager;
+use App\Services\Protocol\JMVL512\Manager as JMVL512Manager;
 
 class ProtocolFactory
 {
@@ -30,6 +31,7 @@ class ProtocolFactory
             'osmand' => OsmAndManager::class,
             'queclink' => QueclinkManager::class,
             'teltonika' => TeltonikaManager::class,
+            'JMVL512' => JMVL512Manager::class,
         ];
     }
 
