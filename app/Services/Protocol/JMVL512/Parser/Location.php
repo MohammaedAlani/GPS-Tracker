@@ -14,7 +14,12 @@ class Location extends ParserAbstract
             return [];
         }
 
-        // TODO: Parse GPS timestamp, lat/lon, speed, etc.
+        // Extract device ID from the hex string
+        $deviceIdHex = substr($hex, 8, 16);
+        $deviceId = ltrim(gmp_strval(gmp_init($deviceIdHex, 16)), '0');
+        // Extract latitude and longitude from the hex string
+        $latitudeHex = substr($hex, 24, 8);
+        $longitudeHex = substr($hex, 32, 8);
 
         return [[
             'type' => 'location',

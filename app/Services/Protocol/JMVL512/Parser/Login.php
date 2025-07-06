@@ -8,19 +8,21 @@ class Login extends ParserAbstract
 {
     public function resources(): array
     {
-        $hex = bin2hex($this->message);
+        $serial = substr($this->message, 22, 4); // extract serial
+        $payload = '0501' . $serial;
 
-        if (substr($hex, 6, 2) !== '01') {
-            return [];
-        }
+        $crc = strtoupper(dechex(crc16(hex2bin($payload))));
+        $crc = str_pad($crc, 4, '0', STR_PAD_LEFT);
 
-        $imeiHex = substr($hex, 8, 16);
-        $imei = ltrim(gmp_strval(gmp_init($imeiHex, 16)), '0');
+        $ack = '7878' . $payload . $crc . '0D0A';
 
-        return [[
-            'type' => 'login',
-            'device_id' => $imei,
-            'raw' => $hex,
-        ]];
+        $this->resources[] = [
+            'message' => $this->message,
+            'serial' => $serial,
+            'response' => hex2bin($ack),
+            'data' => [],
+        ];
+
+        return $this->resources;
     }
 }
