@@ -62,7 +62,124 @@ export default class {
 
         this.listTable = null;
 
+        this.animationMarker = null;
+        this.animationLine = null;
+        this.isAnimating = false;
+        this.animationIndex = 0;
+        this.animationInterval = null;
+        this.animationSpeed = 100;
+
         this.storage = new Storage('map');
+
+        return this;
+    }
+
+    startAnimation(positions) {
+        if (this.isAnimating || positions.length < 2) {
+            return this;
+        }
+
+        this.isAnimating = true;
+        this.animationIndex = 0;
+
+        if (this.line) {
+            this.line.setStyle({ opacity: 0.2 });
+        }
+
+        this.animationLine = L.polyline([], {
+            color: '#FF4444',
+            weight: 6,
+            opacity: 1,
+            smoothFactor: 1
+        }).addTo(this.getMap());
+
+        const startLatLng = this.getLatLng(positions[0]);
+
+        this.animationMarker = L.marker(startLatLng, {
+            icon: L.icon({
+                iconUrl: WWW + '/build/images/map-vehicle-moving.svg', // or map-direction.svg
+                iconSize: [40, 40],
+                iconAnchor: [20, 20],
+            }),
+            rotationAngle: positions[0].direction || 0,
+            rotationOrigin: 'center'
+        }).addTo(this.getMap());
+
+        this.animationMarker.bindPopup('', { offset: new L.Point(0, -20) });
+
+        this.animateToNextPoint(positions);
+
+        return this;
+    }
+
+    animateToNextPoint(positions) {
+        if (!this.isAnimating || this.animationIndex >= positions.length) {
+            this.stopAnimation();
+            return;
+        }
+
+        const currentPosition = positions[this.animationIndex];
+        const currentLatLng = this.getLatLng(currentPosition);
+
+        this.animationMarker.setLatLng(currentLatLng);
+
+        if (currentPosition.direction) {
+            this.animationMarker.setRotationAngle(currentPosition.direction);
+        }
+
+        this.animationLine.addLatLng(currentLatLng);
+
+        const popupContent = this.popupHtmlPosition(currentPosition);
+        this.animationMarker.getPopup().setContent(popupContent);
+
+        this.getMap().panTo(currentLatLng, {
+            animate: true,
+            duration: this.animationSpeed / 1000
+        });
+
+        this.animationIndex++;
+
+        this.animationInterval = setTimeout(() => {
+            this.animateToNextPoint(positions);
+        }, this.animationSpeed);
+    }
+
+    stopAnimation() {
+        this.isAnimating = false;
+
+        if (this.animationInterval) {
+            clearTimeout(this.animationInterval);
+            this.animationInterval = null;
+        }
+
+        if (this.animationMarker) {
+            this.getMap().removeLayer(this.animationMarker);
+            this.animationMarker = null;
+        }
+
+        if (this.animationLine) {
+            this.getMap().removeLayer(this.animationLine);
+            this.animationLine = null;
+        }
+
+        if (this.line) {
+            this.line.setStyle({ opacity: 1 });
+        }
+
+        this.animationIndex = 0;
+
+        return this;
+    }
+
+    setAnimationSpeed(speed) {
+        const speeds = {
+            'slow': 200,
+            'normal': 100,
+            'fast': 50,
+            'very-fast': 20
+        };
+
+        this.animationSpeed = speeds[speed] || 100;
 
         return this;
     }

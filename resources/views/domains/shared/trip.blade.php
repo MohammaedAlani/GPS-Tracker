@@ -10,6 +10,13 @@
 
         <div class="mb-4 text-center">
             <a href="#" class="btn bg-white mr-2" data-map-live>@icon('play', 'w-8 h-8')</a>
+
+            <select data-map-animation-speed class="btn bg-white">
+                <option value="slow">Slow</option>
+                <option value="normal" selected>Normal</option>
+                <option value="fast">Fast</option>
+                <option value="very-fast">Very Fast</option>
+            </select>
         </div>
     </div>
 

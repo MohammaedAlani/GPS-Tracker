@@ -109,22 +109,32 @@ import Map from './map';
         map.showMarker(anchor.split('-').pop());
     }
 
-    const live = document.querySelector('[data-map-live]');
+    const preview = document.querySelector('[data-map-preview]');
 
     const distance = document.querySelector('[data-map-list-distance]');
     const time = document.querySelector('[data-map-list-time]');
 
     let interval, wakeLock;
 
-    if (live && element.dataset.mapPositionsUrl) {
-        live.addEventListener('click', (e) => {
+    if (preview && positions.length > 1) {
+        preview.addEventListener('click', (e) => {
             e.preventDefault();
 
-            if (interval) {
-                liveStop();
+            if (map.isAnimating) {
+                map.stopAnimation();
+                Feather(preview, 'play');
             } else {
-                liveStart();
+                map.startAnimation(positions);
+                Feather(preview, 'pause');
             }
+        });
+    }
+
+    const speedControl = document.querySelector('[data-map-animation-speed]');
+
+    if (speedControl) {
+        speedControl.addEventListener('change', (e) => {
+            map.setAnimationSpeed(e.target.value);
         });
     }
 
