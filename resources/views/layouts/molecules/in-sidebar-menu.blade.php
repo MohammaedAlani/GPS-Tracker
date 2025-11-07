@@ -259,39 +259,39 @@
     </ul>
 </li>
 
-@php ($active = str_starts_with($ROUTE, 'server.'))
+{{--@php ($active = str_starts_with($ROUTE, 'server.'))--}}
 
-<li>
-    <a href="javascript:;" class="side-menu {{ $active ? 'side-menu--active' : '' }}">
-        <div class="side-menu__icon">@icon('radio')</div>
-        <div class="side-menu__title">
-            {{ __('in-sidebar.server') }} <div class="side-menu__sub-icon {{ $active ? 'transform rotate-180' : '' }}">@icon('chevron-down')</div>
-        </div>
-    </a>
+{{--<li>--}}
+{{--    <a href="javascript:;" class="side-menu {{ $active ? 'side-menu--active' : '' }}">--}}
+{{--        <div class="side-menu__icon">@icon('radio')</div>--}}
+{{--        <div class="side-menu__title">--}}
+{{--            {{ __('in-sidebar.server') }} <div class="side-menu__sub-icon {{ $active ? 'transform rotate-180' : '' }}">@icon('chevron-down')</div>--}}
+{{--        </div>--}}
+{{--    </a>--}}
 
-    <ul class="{{ $active ? 'side-menu__sub-open' : '' }}">
-        <li>
-            <a href="{{ route('server.status') }}" class="side-menu {{ ($ROUTE === 'server.status') ? 'side-menu--active' : '' }}">
-                <div class="side-menu__icon">@icon('activity')</div>
-                <div class="side-menu__title">{{ __('in-sidebar.server-status') }}</div>
-            </a>
-        </li>
+{{--    <ul class="{{ $active ? 'side-menu__sub-open' : '' }}">--}}
+{{--        <li>--}}
+{{--            <a href="{{ route('server.status') }}" class="side-menu {{ ($ROUTE === 'server.status') ? 'side-menu--active' : '' }}">--}}
+{{--                <div class="side-menu__icon">@icon('activity')</div>--}}
+{{--                <div class="side-menu__title">{{ __('in-sidebar.server-status') }}</div>--}}
+{{--            </a>--}}
+{{--        </li>--}}
 
-        <li>
-            <a href="{{ route('server.index') }}" class="side-menu {{ ($ROUTE === 'server.index') ? 'side-menu--active' : '' }}">
-                <div class="side-menu__icon">@icon('list')</div>
-                <div class="side-menu__title">{{ __('in-sidebar.server-index') }}</div>
-            </a>
-        </li>
+{{--        <li>--}}
+{{--            <a href="{{ route('server.index') }}" class="side-menu {{ ($ROUTE === 'server.index') ? 'side-menu--active' : '' }}">--}}
+{{--                <div class="side-menu__icon">@icon('list')</div>--}}
+{{--                <div class="side-menu__title">{{ __('in-sidebar.server-index') }}</div>--}}
+{{--            </a>--}}
+{{--        </li>--}}
 
-        <li>
-            <a href="{{ route('server.create') }}" class="side-menu {{ ($ROUTE === 'server.create') ? 'side-menu--active' : '' }}">
-                <div class="side-menu__icon">@icon('plus-circle')</div>
-                <div class="side-menu__title">{{ __('in-sidebar.server-create') }}</div>
-            </a>
-        </li>
-    </ul>
-</li>
+{{--        <li>--}}
+{{--            <a href="{{ route('server.create') }}" class="side-menu {{ ($ROUTE === 'server.create') ? 'side-menu--active' : '' }}">--}}
+{{--                <div class="side-menu__icon">@icon('plus-circle')</div>--}}
+{{--                <div class="side-menu__title">{{ __('in-sidebar.server-create') }}</div>--}}
+{{--            </a>--}}
+{{--        </li>--}}
+{{--    </ul>--}}
+{{--</li>--}}
 
 @php ($active = str_starts_with($ROUTE, 'city.') || str_starts_with($ROUTE, 'state.') || str_starts_with($ROUTE, 'country.'))
 
