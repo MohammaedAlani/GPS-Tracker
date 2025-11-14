@@ -13,8 +13,7 @@ class Route extends RouteServiceProvider
     public function boot(): void
     {
         $this->patterns();
-
-        parent::boot();
+        $this->loadRoutes();
     }
 
     /**
@@ -29,10 +28,23 @@ class Route extends RouteServiceProvider
     /**
      * @return void
      */
-    public function map(): void
+    protected function loadRoutes(): void
     {
+        $this->mapWebFile();
         $this->mapWeb();
         $this->mapApi();
+    }
+
+    /**
+     * @return void
+     */
+    protected function mapWebFile(): void
+    {
+        if (file_exists(base_path('routes/web.php'))) {
+            RouteFacade::group([], function () {
+                require base_path('routes/web.php');
+            });
+        }
     }
 
     /**
@@ -48,7 +60,7 @@ class Route extends RouteServiceProvider
      */
     protected function mapApi(): void
     {
-        Route::middleware('user-auth-api')
+        RouteFacade::middleware('user-auth-api')
             ->name('api.')
             ->prefix('api')
             ->group(fn () => $this->mapLoadRouter('ControllerApi'));

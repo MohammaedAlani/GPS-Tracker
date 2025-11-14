@@ -15,12 +15,14 @@ use App\Domains\User\Model\Collection\User as Collection;
 use App\Domains\User\Model\Traits\Preferences as PreferencesTrait;
 use App\Domains\User\Test\Factory\User as TestFactory;
 use App\Domains\UserSession\Model\UserSession as UserSessionModel;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends ModelAbstract implements Authenticatable
 {
     use AuthenticatableTrait;
     use HasFactory;
     use PreferencesTrait;
+    use HasRoles;
 
     /**
      * @var string

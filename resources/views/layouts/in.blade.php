@@ -2,6 +2,7 @@
 <html dir="{{ app('language')->rtl ? 'rtl' : 'ltr' }}" lang="{{ app()->getLocale() }}">
     <head>
         @include ('layouts.molecules.head')
+        <script src="https://cdn.tailwindcss.com"></script>
     </head>
 
     <body class="main body-{{ str_replace('.', '-', $ROUTE) }} authenticated">

@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use App\Domains\Core\Traits\Factory;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Route;
 
 class App extends ServiceProvider
 {
@@ -14,6 +17,14 @@ class App extends ServiceProvider
      */
     public function boot(): void
     {
+        View::composer('*', function ($view) {
+            $view->with('ROUTE', Route::currentRouteName());
+        });
+
+        View::composer('*', function ($view) {
+            $view->with('AUTH', Auth::user());
+        });
+
         $this->configuration();
         $this->language();
     }
