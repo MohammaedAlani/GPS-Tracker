@@ -19,6 +19,7 @@ use App\Domains\User\Model\User as UserModel;
 use App\Domains\Vehicle\Model\Builder\Vehicle as Builder;
 use App\Domains\Vehicle\Model\Collection\Vehicle as Collection;
 use App\Domains\Vehicle\Test\Factory\Vehicle as TestFactory;
+use Spatie\Permission\Models\Role;
 
 class Vehicle extends ModelAbstract
 {
@@ -149,5 +150,10 @@ class Vehicle extends ModelAbstract
     public function config(string $key): int
     {
         return intval($this->config[$key] ?? 0) ?: app('configuration')->int($key);
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'vehicle_roles');
     }
 }

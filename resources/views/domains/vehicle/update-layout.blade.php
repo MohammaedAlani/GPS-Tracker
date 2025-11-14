@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Route; @endphp
 @extends ('layouts.in')
 
 @section ('body')
@@ -8,6 +9,7 @@
         <a href="{{ route('vehicle.update.device', $row->id) }}" class="p-4 {{ ($ROUTE === 'vehicle.update.device') ? 'active' : '' }}" role="tab">{{ __('vehicle-update.devices') }}</a>
         <a href="{{ route('vehicle.update.alarm', $row->id) }}" class="p-4 {{ ($ROUTE === 'vehicle.update.alarm') ? 'active' : '' }}" role="tab">{{ __('vehicle-update.alarms') }}</a>
         <a href="{{ route('vehicle.update.alarm-notification', $row->id) }}" class="p-4 {{ ($ROUTE === 'vehicle.update.alarm-notification') ? 'active' : '' }}" role="tab">{{ __('vehicle-update.notifications') }}</a>
+        <a href="{{ route('vehicle.update.role', $row->id) }}" class="p-4 {{ Route::is('vehicle.update.role') ? 'active' : '' }}" role="tab">Roles</a>
     </div>
 </div>
 
