@@ -2,9 +2,11 @@
 
 namespace App\Domains\User\Controller;
 
+use App\Models\UserRoles;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use App\Domains\User\Controller\Service\Update as ControllerService;
+use Illuminate\Support\Facades\Auth;
 
 class Update extends ControllerAbstract
 {
@@ -49,6 +51,20 @@ class Update extends ControllerAbstract
     protected function update(): RedirectResponse
     {
         $this->action()->update();
+
+        $role = $this->request->input('role');
+
+        $userRole = UserRoles::where('user_id', Auth::user()->id)->first();
+
+        if (!$userRole) {
+            $userRole = new UserRoles();
+            $userRole->user_id = Auth::user()->id;
+            $userRole->role_id = $role;
+            $userRole->save();
+        } else {
+            $userRole->role_id = $role;
+            $userRole->save();
+        }
 
         $this->sessionMessage('success', __('user-update.success'));
 

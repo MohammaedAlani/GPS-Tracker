@@ -18,6 +18,15 @@
         </div>
     </div>
 
+    <div class="lg:flex">
+        <div class="flex-1 p-2">
+            @php
+            $roles = \Spatie\Permission\Models\Role::all();
+            @endphp
+            <x-select name="role" :options="$roles" value="id" text="name" label="Role" required></x-select>
+        </div>
+    </div>
+
     <div class="p-2">
         <label for="user-api_key" class="form-label">{{ __('user-create.api_key') }}</label>
 
