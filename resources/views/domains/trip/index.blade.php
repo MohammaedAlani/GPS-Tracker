@@ -110,6 +110,8 @@
                 <td data-table-sort-value="{{ (int)$row->shared_public }}" class="w-1"><a href="{{ route('trip.update.boolean', [$row->id, 'shared_public']) }}" class="block" data-update-boolean="shared_public">@status($row->shared_public)</a></td>
 
                 <td class="w-1">
+                    <a href="{{ route('trip.playback.index', $row->id) }}">@icon('play', 'w-4 h-4')</a>
+                    <span class="mx-2"></span>
                     <a href="{{ route('trip.update', $row->id) }}">@icon('edit', 'w-4 h-4')</a>
                     <span class="mx-2"></span>
                     <a href="{{ route('trip.update.stat', $row->id) }}">@icon('bar-chart-2', 'w-4 h-4')</a>
