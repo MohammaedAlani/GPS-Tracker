@@ -11,9 +11,11 @@ class DashboardController
     public function index() {
         $vehicles = DB::table('vehicle')
             ->join('vehicle_roles', 'vehicle.id', '=', 'vehicle_roles.vehicle_id')
-            ->join('user_roles', 'vehicle_roles.id', '=', 'user_roles.role_id')
-            ->get()
-            ->toArray();
+            ->join('user_roles', 'vehicle_roles.role_id', '=', 'user_roles.role_id')
+            ->where('user_roles.user_id', Auth::user()->id)   // ← required to filter by the current user
+            ->select('vehicle.*')
+            ->get();
+
         return view('dashboard.index', compact('vehicles'));
     }
 
