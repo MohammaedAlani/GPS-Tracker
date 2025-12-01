@@ -52,13 +52,33 @@
         const vehicleIcon = L.divIcon({
             className: 'custom-vehicle-marker',
             html: `<div style="background-color: #3B82F6; width: 32px; height: 32px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
-                    <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
-                        <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
-                    </svg>
-                   </div>`,
+                <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
+                    <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
+                </svg>
+               </div>`,
             iconSize: [32, 32],
             iconAnchor: [16, 16]
         });
+
+        function humanizeTime(dateStr) {
+            if (!dateStr) return "No data";
+
+            const date = new Date(dateStr);
+            if (isNaN(date)) return "Invalid";
+
+            const now = new Date();
+            const diff = now - date;
+            const mins = Math.floor(diff / 60000);
+
+            if (mins < 1) return "Just now";
+            if (mins < 60) return `${mins}m ago`;
+
+            const hours = Math.floor(mins / 60);
+            if (hours < 24) return `${hours}h ago`;
+
+            const days = Math.floor(hours / 24);
+            return `${days}d ago`;
+        }
 
         async function updateAllVehicles() {
             try {
@@ -84,22 +104,43 @@
                     const indicator = document.getElementById(`indicator-${vehicleId}`);
                     const statusText = document.getElementById(`status-${vehicleId}`);
 
-                    if (parseFloat(speed) > 0) {
+                    // --- Humanize last_seen ---
+                    const lastSeen = data.last_seen ? new Date(data.last_seen) : null;
+                    const humanized = humanizeTime(data.last_seen);
+                    const fullFormat = lastSeen
+                        ? lastSeen.toISOString().replace('T', ' ').substring(0, 19)
+                        : "No data";
+
+                    document.getElementById(`last-update-${vehicleId}`).textContent = humanized;
+                    document.getElementById(`last-update-${vehicleId}`).title = fullFormat;
+
+                    // --- Detect old data ---
+                    let isOldData = false;
+                    if (speed > 0 && lastSeen) {
+                        const minDiff = (new Date() - lastSeen) / 60000;
+                        if (minDiff > 10) {     // old data threshold
+                            isOldData = true;
+                        }
+                    }
+
+                    // --- Status/UI coloring ---
+                    if (isOldData) {
+                        indicator.className = 'w-2 h-2 rounded-full bg-yellow-500';
+                        statusText.textContent = 'Old Data';
+                        statusText.className = 'text-xs text-yellow-600';
+                    }
+                    else if (parseFloat(speed) > 0) {
                         indicator.className = 'w-2 h-2 rounded-full bg-green-500 animate-pulse';
                         statusText.textContent = 'Moving';
                         statusText.className = 'text-xs text-green-600';
-                    } else {
+                    }
+                    else {
                         indicator.className = 'w-2 h-2 rounded-full bg-gray-400';
                         statusText.textContent = 'Stopped';
                         statusText.className = 'text-xs text-gray-500';
                     }
 
-                    const lastUpdate = new Date(data.date_at);
-                    const now = new Date();
-                    const diffMinutes = Math.floor((now - lastUpdate) / 60000);
-                    document.getElementById(`last-update-${vehicleId}`).textContent =
-                        diffMinutes < 1 ? 'Just now' : `${diffMinutes}m ago`;
-
+                    // --- Map update ---
                     const lat = parseFloat(data.latitude);
                     const lng = parseFloat(data.longitude);
 
@@ -110,13 +151,13 @@
                         const marker = L.marker([lat, lng], { icon: vehicleIcon })
                             .addTo(map)
                             .bindPopup(`
-                                <div class="text-sm">
-                                    <strong>${vehicle.name}</strong><br>
-                                    Speed: ${speed} km/h<br>
-                                    Direction: ${data.direction}°<br>
-                                    Last Update: ${data.date_at}
-                                </div>
-                            `);
+                            <div class="text-sm">
+                                <strong>${vehicle.name}</strong><br>
+                                Speed: ${speed} km/h<br>
+                                Direction: ${data.direction}°<br>
+                                Last Seen: ${fullFormat}
+                            </div>
+                        `);
                         markers[vehicleId] = marker;
                     }
 
