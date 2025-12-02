@@ -89,7 +89,7 @@
             const now = new Date();
             const diff = now - date;
             const mins = Math.floor(diff / 60000);
-            if (mins < 1) return "Just now";
+            if (mins < 1) return "Connected";
             if (mins < 60) return `${mins}m ago`;
             const hours = Math.floor(mins / 60);
             if (hours < 24) return `${hours}h ago`;
@@ -139,17 +139,13 @@
                     document.getElementById(`last-update-${vehicleId}`).textContent = humanized;
                     document.getElementById(`last-update-${vehicleId}`).title = `${fullFormat} (${tz})`;
 
-                    let isOldData = false;
-                    if (speed > 0 && lastSeenJS) {
+                    let isConnected = false;
+                    if (lastSeenJS) {
                         const minDiff = (new Date() - lastSeenJS) / 60000;
-                        if (minDiff > 10) isOldData = true;
+                        if (minDiff < 1) isConnected = true;
                     }
 
-                    if (isOldData) {
-                        indicator.className = 'w-2 h-2 rounded-full bg-yellow-500';
-                        statusText.textContent = 'Old Data';
-                        statusText.className = 'text-xs text-yellow-600';
-                    } else if (parseFloat(speed) > 0) {
+                    if (parseFloat(speed) > 0) {
                         indicator.className = 'w-2 h-2 rounded-full bg-green-500 animate-pulse';
                         statusText.textContent = 'Moving';
                         statusText.className = 'text-xs text-green-600';
