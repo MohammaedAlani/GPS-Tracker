@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Domains\Device\Model\Device;
+use App\Domains\Timezone\Model\Timezone;
+use App\Domains\Vehicle\Model\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,25 +29,40 @@ class DashboardController
         $status = [];
 
         foreach ($vehicles as $vehicle) {
-            $lastStatus = DB::table('position')
+            $lastStatus = [
+                'vehicle_id' => $vehicle,
+                'latitude' => null,
+                'longitude' => null,
+                'speed' => 0,
+                'direction' => 0,
+                'created_at' => null,
+                'timezone_id' => null,
+            ];
+
+            $position = DB::table('position')
                 ->where('vehicle_id', $vehicle)
                 ->orderBy('created_at', 'desc')
                 ->first();
 
-            $lastStatus = $lastStatus ? (array) $lastStatus : [];
+            if ($position) {
+                $lastStatus = array_merge($lastStatus, (array)$position);
+            }
 
             $deviceLastSeen = Device::where('vehicle_id', $vehicle)
                 ->orderBy('last_seen', 'desc')
-                ->value('last_seen');
+                ->first();
 
-            $positionCreatedAt = $lastStatus['created_at'] ?? null;
-
-            $lastStatus['last_seen'] = collect([$positionCreatedAt, $deviceLastSeen])
+            $lastStatus['last_seen'] = collect([
+                $lastStatus['created_at'],
+                $deviceLastSeen->last_seen,
+            ])
                 ->filter()
                 ->map(fn($date) => Carbon::parse($date))
                 ->sortDesc()
                 ->first()
                 ?->toDateTimeString();
+
+            $lastStatus['timezone_id'] = Timezone::find(Vehicle::find($vehicle)->timezone_id);
 
             $status[] = $lastStatus;
         }
